@@ -1,0 +1,6 @@
+Django==2.1.14
+djangorestframework
+django-rest-auth
+django-allauth
+psycopg2-binary
+xhtml2pdf # for pdf generation

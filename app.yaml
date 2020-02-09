@@ -1,0 +1,18 @@
+runtime: python37
+
+includes:
+  - env.yaml
+
+handlers:
+- url: /static
+  static_dir: static/
+
+- url: /
+  static_files: webapp/dist/invoiceapp/index.html
+  upload: webapp/dist/invoiceapp/index.html
+
+- url: /
+  static_dir: webapp/dist/invoiceapp
+
+- url: /api/.*
+  script: auto

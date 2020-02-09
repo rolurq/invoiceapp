@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  backend:
+    build: .
+    image: invoice-app
+    volumes:
+      - .:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_NAME: invoiceapp
+
+  frontend:
+    image: node:10-alpine
+    volumes:
+      - ./webapp:/app
+    working_dir: /app
+    ports:
+      - 4200:4200
+    command: npx ng serve --host 0.0.0.0
+
+  database:
+    image: postgres:11-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: invoiceapp
+
+volumes:
+  postgres_data:
