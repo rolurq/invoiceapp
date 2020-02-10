@@ -1,0 +1,24 @@
+<div fxLayout fxLayoutAlign="center" style="margin: 100px 0;">
+  <mat-card fxFlex="50%" fxFlex.xs="80%" style="text-align: center;">
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" fxLayout="column">
+        <mat-error *ngIf="loginForm.errors?.invalid">Invalid username or password</mat-error>
+        <mat-form-field appearance="fill">
+          <mat-label for="username">Username</mat-label>
+          <input matInput placeholder="Ex. jhon" required formControlName="username">
+          <mat-error *ngIf="username.errors?.required">username is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label for="password">Password</mat-label>
+          <input type="password" matInput required formControlName="password">
+          <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
+        </mat-form-field>
+
+        <button type="submit" mat-raised-button [disabled]="loginForm.invalid" color="primary">Log in</button>
+      </form>
+      Don't have an account? <a routerLink="/register" [queryParams]="{returnUrl: returnUrl}">Register</a>
+    </mat-card-content>
+  </mat-card>
+</div>
