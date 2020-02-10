@@ -18,6 +18,7 @@ class Product(models.Model):
 
 class Invoice(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     items = models.ManyToManyField(Product, through='ProductInvoice')
     issue_date = models.DateField(auto_now_add=True)
     terms = models.TextField()
@@ -26,5 +27,4 @@ class Invoice(models.Model):
 class ProductInvoice(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
     quantity = models.FloatField()
