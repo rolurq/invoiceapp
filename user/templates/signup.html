@@ -1,0 +1,89 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .form-row input {
+    clear: both;
+    padding: 8px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+    <div class="form-row">
+      {{ form.username.errors }}
+      {{ form.username.label_tag }} {{ form.username }}
+    </div>
+    <div class="form-row">
+      {{ form.email.errors }}
+      {{ form.email.label_tag }} {{ form.email }}
+    </div>
+    <div class="form-row">
+      {{ form.password1.errors }}
+      {{ form.password1.label_tag }} {{ form.password1 }}
+      <input type="hidden" name="next" value="{{ next }}">
+    </div>
+    <div class="form-row">
+      {{ form.password2.errors }}
+      {{ form.password2.label_tag }} {{ form.password2 }}
+    </div>
+    <div class="form-row">
+      {{ form.first_name.errors }}
+      {{ form.first_name.label_tag }} {{ form.first_name }}
+    </div>
+    <div class="form-row">
+      {{ form.last_name.errors }}
+      {{ form.last_name.label_tag }} {{ form.last_name }}
+    </div>
+    <div class="form-row">
+      {{ form.phone.errors }}
+      {{ form.phone.label_tag }} {{ form.phone }}
+    </div>
+    <div class="form-row">
+      {{ form.website.errors }}
+      {{ form.website.label_tag }} {{ form.website }}
+    </div>
+    <div class="form-row">
+      {{ form.address.errors }}
+      {{ form.address.label_tag }} {{ form.address }}
+    </div>
+    <div class="form-row">
+      {{ form.city.errors }}
+      {{ form.city.label_tag }} {{ form.city }}
+    </div>
+    <div class="form-row">
+      {{ form.state.errors }}
+      {{ form.state.label_tag }} {{ form.state }}
+    </div>
+    <div class="form-row">
+      {{ form.country.errors }}
+      {{ form.country.label_tag }} {{ form.country }}
+    </div>
+    <div class="form-row">
+      {{ form.zip_code.errors }}
+      {{ form.zip_code.label_tag }} {{ form.zip_code }}
+    </div>
+    <div class="submit-row">
+      <label>&nbsp;</label><input type="submit" value="{% trans 'Sign up' %}">
+    </div>
+</form>
+
+</div>
+{% endblock %}
