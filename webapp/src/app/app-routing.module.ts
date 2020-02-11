@@ -5,10 +5,12 @@ import { RegisterComponent } from './component/register/register.component';
 import { AuthGuard } from './auth/auth.guard';
 import { InvoicesComponent } from './component/invoices/invoices.component';
 import { AccessGuard } from './auth/access.guard';
+import { CreateComponent } from './component/create/create.component';
 
 
 const routes: Routes = [
   { path: '', component: InvoicesComponent, canActivate: [AuthGuard] },
+  { path: 'new', component: CreateComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent, canActivate: [AccessGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [AccessGuard] },
 ];

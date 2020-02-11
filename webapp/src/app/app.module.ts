@@ -9,6 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AuthService } from './auth/auth.service';
@@ -20,13 +22,17 @@ import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { InvoicesComponent } from './component/invoices/invoices.component';
 import { InvoiceService } from './invoice/invoice.service';
+import { CreateComponent } from './component/create/create.component';
+import { ClientService } from './invoice/client.service';
+import { ProductService } from './invoice/product.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    InvoicesComponent
+    InvoicesComponent,
+    CreateComponent,
   ],
   imports: [
     HttpClientModule,
@@ -42,11 +48,15 @@ import { InvoiceService } from './invoice/invoice.service';
     MatToolbarModule,
     MatIconModule,
     MatTableModule,
+    MatSelectModule,
+    MatCheckboxModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthService,
     InvoiceService,
+    ClientService,
+    ProductService,
   ],
   bootstrap: [AppComponent]
 })

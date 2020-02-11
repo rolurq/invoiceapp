@@ -1,0 +1,55 @@
+<div fxLayout fxLayoutAlign="center" style="margin: 100px 0;">
+  <mat-card fxFlex="60%" fxFlex.xs="80%" style="text-align: center;">
+    <mat-card-title>New invoice</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="createForm" (ngSubmit)="onSubmit(createForm.value)" fxLayout="column">
+        <mat-form-field appearance="fill">
+          <mat-label>Select client</mat-label>
+          <mat-select formControlName="client">
+            <mat-option *ngFor="let client of clients" [value]="client.id">{{client.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <table mat-table [dataSource]="products">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <mat-text-column name="name"></mat-text-column>
+          <mat-text-column name="price" headerText="Price ($)"></mat-text-column>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Amount</th>
+            <td mat-cell *matCellDef="let row"></td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+        </table>
+
+        <mat-form-field appearance="fill">
+          <mat-label for="terms">Terms</mat-label>
+          <textarea matInput required formControlName="terms"></textarea>
+          <mat-error *ngIf="terms.errors?.required">Terms are required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label for="tax">Tax</mat-label>
+          <input matInput type="number" required formControlName="tax">
+          <mat-error *ngIf="tax.errors?.required">Tax is required</mat-error>
+        </mat-form-field>
+
+        <button type="submit" mat-raised-button [disabled]="createForm.invalid" color="primary">Create</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
