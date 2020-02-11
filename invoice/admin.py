@@ -21,7 +21,7 @@ class ProductInvoiceInline(admin.TabularInline):
         if obj is None:
             return False;
         return request.user == obj.owner
-    
+
     def has_delete_permission(self, request, obj=None):
         return self.has_change_permission(request, obj)
 
@@ -61,7 +61,7 @@ class InvoiceAdmin(admin.ModelAdmin):
         if obj is None:
             return False;
         return request.user == obj.owner
-    
+
     def has_delete_permission(self, request, obj=None):
         return self.has_change_permission(request, obj)
 
@@ -69,6 +69,11 @@ class InvoiceAdmin(admin.ModelAdmin):
         return True
 
 class ClientAdmin(admin.ModelAdmin):
+    def get_field_queryset(self, db, db_field, request):
+        if db_field.name == 'user':
+            return db_field.remote_field.model.objects.filter(pk=request.user.pk)
+        return super().get_field_queryset(db, db_field, request)
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(user=request.user)
@@ -80,7 +85,7 @@ class ClientAdmin(admin.ModelAdmin):
         if obj is None:
             return False;
         return request.user == obj.user
-    
+
     def has_delete_permission(self, request, obj=None):
         return self.has_change_permission(request, obj)
 
@@ -88,6 +93,11 @@ class ClientAdmin(admin.ModelAdmin):
         return True
 
 class ProductAdmin(admin.ModelAdmin):
+    def get_field_queryset(self, db, db_field, request):
+        if db_field.name == 'owner':
+            return db_field.remote_field.model.objects.filter(pk=request.user.pk)
+        return super().get_field_queryset(db, db_field, request)
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(owner=request.user)
@@ -99,7 +109,7 @@ class ProductAdmin(admin.ModelAdmin):
         if obj is None:
             return False;
         return request.user == obj.owner
-    
+
     def has_delete_permission(self, request, obj=None):
         return self.has_change_permission(request, obj)
 
