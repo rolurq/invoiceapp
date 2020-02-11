@@ -3,4 +3,5 @@ djangorestframework
 django-rest-auth
 django-allauth
 psycopg2-binary
+django-cors-headers
 xhtml2pdf # for pdf generation
