@@ -53,3 +53,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
         for item in items:
             ProductInvoice.objects.create(invoice=invoice, **item)
         return invoice
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['client'] = instance.client.name
+        return rep
