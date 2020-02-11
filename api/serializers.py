@@ -2,39 +2,54 @@ from rest_framework import serializers
 
 from invoice.models import Invoice, Client, ProductInvoice, Product
 
-class InvoiceClientSerializer(serializers.ModelSerializer):
+class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ('name',)
+        exclude = ('user',)
+        read_only_fields = ('id',)
 
-class InvoiceListSerializer(serializers.ModelSerializer):
-    client = InvoiceClientSerializer(read_only=True)
-
-    class Meta:
-        model = Invoice
-        fields = ('id', 'issue_date', 'client')
-
-class InvoiceCreateClientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Client
-        fields = ('name', 'address', 'city', 'state', 'country', 'zip_code',)
+    def create(self, validated_data):
+        client = Client(**validated_data)
+        client.save()
+        return client
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'description', 'price')
+        exclude = ('owner',)
+        read_only_fields = ('id',)
+
+    def create(self, validated_data):
+        product = Product(**validated_data)
+        product.save()
+        return product
 
 class ProductInvoiceSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = serializers.PrimaryKeyRelatedField(required=True, queryset=Product.objects.all())
 
     class Meta:
         model = ProductInvoice
-        fields = ('quantity', 'product')
+        exclude = ('invoice',)
+        read_only_fields = ('id',)
 
-class InvoiceCreateSerializer(serializers.ModelSerializer):
-    client = InvoiceCreateClientSerializer()
-    items = ProductInvoiceSerializer(many=True)
+    def to_representation(self, instance):
+        invoice = self.root.instance
+        return {'product': instance.pk, 'invoice': invoice}
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    client = serializers.PrimaryKeyRelatedField(required=True, queryset=Client.objects.all())
+    items = ProductInvoiceSerializer(many=True, write_only=True)
 
     class Meta:
         model = Invoice
-        fields = ('terms', 'tax', 'client', 'items')
+        exclude = ('owner',)
+        read_only_fields = ('id', 'issue_date')
+
+    def create(self, validated_data):
+        items = validated_data.pop('items')
+        invoice = Invoice(**validated_data)
+        invoice.save()
+
+        for item in items:
+            ProductInvoice.objects.create(invoice=invoice, **item)
+        return invoice
