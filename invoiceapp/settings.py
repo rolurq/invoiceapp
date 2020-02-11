@@ -35,6 +35,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'user.apps.UserConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +54,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # required but not used
 
     'invoice.apps.InvoiceConfig',
-    'user.apps.UserConfig',
 ]
 
 SITE_ID = 1
