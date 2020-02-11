@@ -1,0 +1,175 @@
+<html>
+  <head>
+    <style>
+      @page {
+        size: letter portrait;
+
+        @frame header_frame {
+          -pdf-frame-content: header;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+
+        @frame content_frame {
+          left: 26pt;
+          right: 13pt;
+          top: 145pt;
+          height: 550pt;
+        }
+      }
+
+      #header {
+        background-color: #FE5500;
+        color: white;
+        padding: 0 13pt;
+      }
+
+      th {
+        font-weight: 400;
+        text-align: left;
+      }
+
+      #info th, #end th {
+        color: #acadad;
+        padding-bottom: 2pt;
+      }
+
+      #info td {
+        font-size: 11pt;
+      }
+
+      #items {
+        margin-top: 50pt;
+        border-collapse: collapse;
+      }
+
+      #items td {
+        vertical-align: top;
+        padding: 6pt 0;
+      }
+
+      #items th {
+        color: #FE5500;
+        padding-top: 7pt;
+      }
+
+      #total {
+        margin-top: 60pt;
+        border-collapse: collapse;
+      }
+
+      #total td {
+        padding: 3pt 0;
+      }
+
+      #total td, #end td {
+        text-align: right;
+      }
+
+      .title {
+        font-size: 32pt;
+      }
+      * {
+        font-size: 10pt;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table id="header">
+      <tr style="height: 25pt;">
+        <td colspan="3"></td>
+      </tr>
+      <tr>
+        <td rowspan="4" align="left" style="vertical-align: text-top;" class="title">INVOICE</td>
+        <td align="right" style="width: 153pt;">
+          {{ user.phone }}
+        </td>
+        <td align="right" style="width: 153pt;">
+          {{ user.address }}
+        </td>
+      </tr>
+      <tr>
+        <td align="right">{{ user.email }}</td>
+        <td align="right">{{ user.city }}, {{ user.state }}, {{ user.country }}</td>
+      </tr>
+      <tr>
+        <td align="right">{{ user.website }}</td>
+        <td align="right">{{ user.zip_code }}</td>
+      </tr>
+      <tr style="height: 25pt;">
+        <td colspan="2"></td>
+      </tr>
+    </table>
+
+    <table id="info">
+      <tr>
+        <th>Billed To</th>
+        <th>Invoice Number</th>
+        <th align="right">Invoice Total</th>
+      </tr>
+      <tr>
+        <td>{{ invoice.client.name }}</td>
+        <td>{{ invoice.pk }}</td>
+        <td align="right" style="color: #FE5500; font-size: 30pt;" rowspan="3">$ {{ total|floatformat:2 }}</td>
+      </tr>
+      <tr>
+        <td>{{ invoice.client.address }}</td>
+      </tr>
+      <tr>
+        <td>{{ invoice.client.city }}, {{ invoice.client.state }}, {{ invoice.client.country }}</td>
+        <th align="left">Date of Issue</th>
+      </tr>
+      <tr>
+        <td>{{ invoice.client.zip_code }}</td>
+        <td>{{ invoice.issue_date|date:'d/m/Y' }}</td>
+      </tr>
+    </table>
+
+    <table id="items">
+      <tr style="border-top: 2px solid #FE5500;">
+        <th>Description</th>
+        <th align="right">Unit Cost</th>
+        <th align="right">Qty / Hr Rate</th>
+        <th align="right">Amount</th>
+      </tr>
+      {% for item in items %}
+      <tr style="border-bottom: 1px solid #dadada; height: 50pt;">
+        <td style="vertical-align: middle;">
+          {{ item.product.name }} <br> <span style="color: #acadad;">{{ item.product.description }}</span>
+        </td>
+        <td align="right">$ {{ item.product.price|floatformat }}</td>
+        <td align="right">{{ item.quantity }}</td>
+        <td align="right">{{ item.amount|floatformat }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <table id="total">
+      <tr>
+        <td colspan="3" style="color: #FE5500;">Subtotal</td>
+        <td>$ {{ partial_total|floatformat:2 }}</td>
+      </tr>
+      <tr>
+        <td colspan="3" style="color: #FE5500;">Tax</td>
+        <td>$ {{ invoice.tax|floatformat:2 }}</td>
+      </tr>
+      <tr>
+        <td colspan="3" style="color: #FE5500;">Total</td>
+        <td>$ {{ total|floatformat:2 }}</td>
+      </tr>
+    </table>
+
+    <table id="end">
+      <tr>
+        <th>Invoice Terms</th>
+      </tr>
+      <tr>
+        <td colspan="2" align="left">{{ invoice.terms }}</td>
+        <td style="color: #FE5500;">Amount Due (USD)</td>
+        <td>$ {{ total|floatformat:2 }}</td>
+      </tr>
+    </table>
+  </body>
+</html>

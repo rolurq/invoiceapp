@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 import api.urls
+from invoice.views import generate_pdf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(api.urls))
+    path('api/v1/', include(api.urls)),
+    path('invoice_pdf/<token>/<pk>/', generate_pdf, name='invoice-pdf'),
 ]
