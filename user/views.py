@@ -1,6 +1,7 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import login
 
 login_forbidden = user_passes_test(lambda u: u.is_anonymous, '/')
 
@@ -19,4 +20,6 @@ class SignUpView(generic.CreateView):
         return super().dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        super().form_valid(form)
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        return response
