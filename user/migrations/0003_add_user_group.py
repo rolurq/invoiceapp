@@ -12,7 +12,7 @@ def forwards(apps, schema_editor):
         models.Q(codename='view_product') |
         models.Q(codename='view_productinvoice') |
         models.Q(codename='view_user'))
-    
+
     group = Group.objects.using(db_alias).create(name='public-staff')
     group.permissions.set(permissions)
     group.save()
@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('user', '0002_auto_20200209_2213'),
+        ('invoice', '0003_auto_20200201_0948')
     ]
 
     operations = [
