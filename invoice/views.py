@@ -4,12 +4,12 @@ from django.template.loader import get_template
 from django.contrib.auth.decorators import login_required
 
 from xhtml2pdf import pisa
-from rest_framework.authtoken.models import Token
 
 from .models import Invoice, ProductInvoice
 
-def generate_pdf(request, token, pk):
-    user = get_object_or_404(Token, key=token).user
+@login_required
+def generate_pdf(request, pk):
+    user = request.user
     invoice = get_object_or_404(Invoice, pk=pk, owner=user)
     items = invoice.product_items
     partial_total = invoice.partial_total(items)

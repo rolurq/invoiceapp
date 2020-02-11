@@ -18,9 +18,13 @@ from django.urls import path, include
 
 import api.urls
 from invoice.views import generate_pdf
+from user.admin import public_admin
+from user.views import SignUpView
 
 urlpatterns = [
+    path('', include(public_admin.urls[:2], namespace=public_admin.urls[-1])),
+    path('signup/', SignUpView.as_view()),
     path('admin/', admin.site.urls),
     path('api/v1/', include(api.urls)),
-    path('invoice_pdf/<token>/<pk>/', generate_pdf, name='invoice-pdf'),
+    path('invoice_pdf/<pk>/', generate_pdf, name='invoice-pdf'),
 ]

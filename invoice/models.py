@@ -11,6 +11,9 @@ class Client(models.Model):
     country = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=10)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         unique_together = ('user', 'name')
 
@@ -19,6 +22,9 @@ class Product(models.Model):
     name = models.CharField(max_length=150)
     description = models.CharField(max_length=250)
     price = models.FloatField()
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         unique_together = ('owner', 'name')
@@ -31,6 +37,9 @@ class Invoice(models.Model):
     terms = models.TextField()
     tax = models.FloatField()
 
+    def __str__(self):
+        return "%06d" % self.pk
+
     @property
     def product_items(self):
         return ProductInvoice.objects.filter(invoice=self).annotate(
@@ -41,9 +50,12 @@ class Invoice(models.Model):
     def partial_total(self, items=None):
         resolved_items = self.product_items if items is None else items
         return resolved_items.aggregate(
-            models.Sum('amount', output_field=models.FloatField())).get('amount__sum')
+            models.Sum('amount', output_field=models.FloatField())).get('amount__sum') or 0
 
 class ProductInvoice(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('product', 'invoice')
